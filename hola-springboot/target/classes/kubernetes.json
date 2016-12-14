@@ -1,0 +1,123 @@
+{
+  "apiVersion" : "v1",
+  "kind" : "Template",
+  "labels" : { },
+  "metadata" : {
+    "annotations" : {
+      "description" : "Demo project for Spring Boot",
+      "fabric8.hola-springboot/iconUrl" : "img/icons/spring-boot.svg",
+      "fabric8.hola-springboot/summary" : "Demo project for Spring Boot"
+    },
+    "labels" : { },
+    "name" : "hola-springboot"
+  },
+  "objects" : [ {
+    "apiVersion" : "v1",
+    "kind" : "Service",
+    "metadata" : {
+      "annotations" : { },
+      "labels" : {
+        "project" : "hola-springboot",
+        "provider" : "fabric8",
+        "version" : "1.0",
+        "group" : "com.redhat.examples"
+      },
+      "name" : "hola-springboot"
+    },
+    "spec" : {
+      "deprecatedPublicIPs" : [ ],
+      "externalIPs" : [ ],
+      "ports" : [ {
+        "port" : 80,
+        "protocol" : "TCP",
+        "targetPort" : 8080
+      } ],
+      "selector" : {
+        "project" : "hola-springboot",
+        "provider" : "fabric8",
+        "group" : "com.redhat.examples"
+      },
+      "type" : "LoadBalancer"
+    }
+  }, {
+    "apiVersion" : "v1",
+    "kind" : "ReplicationController",
+    "metadata" : {
+      "annotations" : { },
+      "labels" : {
+        "project" : "hola-springboot",
+        "provider" : "fabric8",
+        "version" : "1.0",
+        "group" : "com.redhat.examples"
+      },
+      "name" : "hola-springboot"
+    },
+    "spec" : {
+      "replicas" : 1,
+      "selector" : {
+        "project" : "hola-springboot",
+        "provider" : "fabric8",
+        "version" : "1.0",
+        "group" : "com.redhat.examples"
+      },
+      "template" : {
+        "metadata" : {
+          "annotations" : { },
+          "labels" : {
+            "project" : "hola-springboot",
+            "provider" : "fabric8",
+            "version" : "1.0",
+            "group" : "com.redhat.examples"
+          }
+        },
+        "spec" : {
+          "containers" : [ {
+            "args" : [ ],
+            "command" : [ ],
+            "env" : [ {
+              "name" : "GREETING_BACKENDSERVICEHOST",
+              "value" : "backend"
+            }, {
+              "name" : "GREETING_BACKENDSERVICEPORT",
+              "value" : "80"
+            }, {
+              "name" : "USE_KUBERNETES_DISCOVERY",
+              "value" : "true"
+            }, {
+              "name" : "KUBERNETES_NAMESPACE",
+              "valueFrom" : {
+                "fieldRef" : {
+                  "fieldPath" : "metadata.namespace"
+                }
+              }
+            } ],
+            "image" : "fabric8/hola-springboot:1.0",
+            "name" : "hola-springboot",
+            "ports" : [ {
+              "containerPort" : 8080,
+              "name" : "http"
+            }, {
+              "containerPort" : 8778,
+              "name" : "jolokia"
+            } ],
+            "readinessProbe" : {
+              "httpGet" : {
+                "path" : "/health",
+                "port" : 8080
+              },
+              "initialDelaySeconds" : 5,
+              "timeoutSeconds" : 30
+            },
+            "securityContext" : { },
+            "volumeMounts" : [ ]
+          } ],
+          "imagePullSecrets" : [ ],
+          "nodeSelector" : { },
+          "serviceAccountName" : "ribbon",
+          "volumes" : [ ]
+        }
+      }
+    }
+  } ],
+  "parameters" : [ ]
+}

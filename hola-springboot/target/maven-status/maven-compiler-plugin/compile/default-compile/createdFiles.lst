@@ -1,0 +1,5 @@
+com\example\HolaRestController.class
+com\example\BackendCommand.class
+com\example\BackendDTO.class
+com\example\GreeterRestController.class
+com\example\HolaSpringbootApplication.class
